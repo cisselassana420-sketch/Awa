@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AWA 🎀 Birthday Game</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(135deg,#ffb5db,#fff,#ffc9e6);min-height:100vh;text-align:center;color:#64143f}
+.wrap{max-width:700px;margin:auto;padding:25px}
+.box{background:#fff;padding:28px;border-radius:30px;box-shadow:0 15px 50px #8b235044}
+h1{font-size:65px;color:#e72c8c;margin:10px}.pink{color:#e72c8c}
+button{border:0;border-radius:20px;padding:16px 25px;margin:8px;background:#ff3e98;color:white;font-size:18px;font-weight:bold;cursor:pointer}
+#game{display:none}
+#arena{height:400px;background:#fff0f8;border:3px dashed #ff75b7;border-radius:25px;position:relative;overflow:hidden}
+.heart{position:absolute;border:0;background:none;font-size:48px;padding:0;margin:0;cursor:pointer}
+#win{display:none;font-size:24px;color:#e72c8c;font-weight:bold}
+</style>
+</head>
+<body>
+<div class="wrap"><div class="box">
+<div>🎀 BARBIE BIRTHDAY 🎀</div>
+<h1>AWA</h1>
+<p>💗 <b>Attrape les 10 cœurs !</b> 💗</p>
+<button id="play">▶️ JOUER</button>
+
+<div id="game">
+<p>Score : <b id="score">0</b> / 10 &nbsp; | &nbsp; Temps : <b id="time">20</b>s</p>
+<div id="arena"></div>
+</div>
+
+<div id="win">
+🎉 BRAVO AWA ! 🎉<br><br>
+Joyeux anniversaire ! 🎂🎀💗<br>
+Tu as gagné !
+</div>
+</div></div>
+
+<script>
+const play=document.getElementById("play");
+const game=document.getElementById("game");
+const arena=document.getElementById("arena");
+const scoreEl=document.getElementById("score");
+const timeEl=document.getElementById("time");
+const win=document.getElementById("win");
+
+let score=0,time=20,timer,spawnTimer;
+
+function newHeart(){
+  if(score>=10)return;
+  const h=document.createElement("button");
+  h.className="heart";
+  h.textContent=["💗","💖","💕","❤️"][Math.floor(Math.random()*4)];
+  h.style.left=Math.floor(Math.random()*88)+"%";
+  h.style.top=Math.floor(Math.random()*80)+"%";
+  h.onclick=function(){
+    score++;
+    scoreEl.textContent=score;
+    h.remove();
+    if(score===10){
+      clearInterval(timer);
+      clearInterval(spawnTimer);
+      arena.innerHTML="";
+      win.style.display="block";
+      play.style.display="none";
+    }else newHeart();
+  };
+  arena.appendChild(h);
+  setTimeout(()=>{if(h.parentNode)h.remove()},1300);
+}
+
+play.onclick=function(){
+  score=0;time=20;
+  scoreEl.textContent=score;timeEl.textContent=time;
+  win.style.display="none";play.style.display="none";game.style.display="block";
+  arena.innerHTML="";
+  newHeart();
+  spawnTimer=setInterval(newHeart,700);
+  timer=setInterval(()=>{
+    time--;timeEl.textContent=time;
+    if(time<=0){
+      clearInterval(timer);clearInterval(spawnTimer);
+      arena.innerHTML='<p style="padding:40px;font-size:22px">⏰ Temps écoulé !<br>Essaie encore AWA 💗</p>';
+      play.textContent="🔄 REJOUER";play.style.display="inline-block";
+    }
+  },1000);
+};
+</script>
+</body>
+</html>
